@@ -1,48 +1,43 @@
-const refs = {
-    days: document.querySelector('[data-value="days"]'),
-    hours: document.querySelector('[data-value="hours"]'),
-    mins: document.querySelector('[data-value="mins"]'),
-    secs: document.querySelector('[data-value="secs"]'),
-    btnStart: document.querySelector('[data-action="start"]'),
-    btnStop: document.querySelector('[data-action="stop"]'),
-    calendar: document.querySelector('.calendar')
-}
+import refs from './refs';
 
 const CountdownTimer = function({selector, targetDate}){
     this.selector = selector;
     this.targetDate = targetDate;
     this.intervalId = null;
-    this.isActivTimer = false;
-
-    this.start = function() {
-        if(this.isActivTimer) {
-            return;
-        }
-        this.isActivTimer = true;
-        const targetDate = new Date(this.targetDate).getTime()                
-
-        this.intervalId = setInterval(()=>{
-            const currentTime = Date.now();
-            const deltaTime = targetDate - currentTime;
-            updateClockFace(deltaTime);                    
-        },1000)
-    };
-
-    this.stop = function(){
-        clearInterval(this.intervalId);
-        this.intervalId = null;
-        this.isActivTimer = false;
-        updateClockFace(0);
-    };
+    this.isActivTimer = false;   
+      
 };
 
-const timer = new CountdownTimer({
+CountdownTimer.prototype.start = function() {
+    if(this.isActivTimer) {
+        return;
+    }
+
+    if(!getValueCalendar()){
+        return alert('Сначала укажите дату');
+    }
+
+    this.isActivTimer = true;
+    const targetDate = new Date(getValueCalendar()).getTime()                
+
+    this.intervalId = setInterval(()=>{
+        const currentTime = Date.now();
+        const deltaTime = targetDate - currentTime;
+        updateClockFace(deltaTime);                    
+    },1000)
+};
+
+CountdownTimer.prototype.stop = function(){
+    clearInterval(this.intervalId);
+    this.intervalId = null;
+    this.isActivTimer = false;
+    updateClockFace(0);
+};
+
+const timer = new CountdownTimer({   
     selector: '#timer-1',
     targetDate: new Date('Jan-14-2021'),
 });
-
-refs.btnStart.addEventListener('click', timer.start.bind(timer));
-refs.btnStop.addEventListener('click', timer.stop.bind(timer));
 
 function updateClockFace(time) {
     const days = pad(Math.floor(time / (1000 * 60 * 60 * 24)));
@@ -60,8 +55,12 @@ function pad(value) {
     return String(value).padStart(2,'0');
 }
 
+refs.btnStart.addEventListener('click', timer.start.bind(timer));
+refs.btnStop.addEventListener('click', timer.stop.bind(timer));
 
-
+function getValueCalendar(){
+    return refs.calendar.value;
+}
 
 
 
