@@ -55,12 +55,14 @@ function pad(value) {
     return String(value).padStart(2,'0');
 }
 
-refs.btnStart.addEventListener('click', timer.start.bind(timer));
-refs.btnStop.addEventListener('click', timer.stop.bind(timer));
-
 function getValueCalendar(){
     return refs.calendar.value;
 }
+
+refs.btnStart.addEventListener('click', timer.start.bind(timer));
+refs.btnStop.addEventListener('click', timer.stop.bind(timer));
+
+
 
 
 
